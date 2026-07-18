@@ -1,0 +1,6 @@
+{
+  "name": "Universal Stream Player",
+  "description": "A high-performance Android player app built in Java, supporting HLS, DASH, and MPD streams, with fully custom-designed playback controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

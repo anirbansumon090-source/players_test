@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/controls_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#99000000"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Top Action Bar -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent">
+
+        <!-- Custom Back Button -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:contentDescription="Go Back"
+            app:tint="#FFFFFF" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:id="@+id/txtVideoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stream Playback"
+                android:textColor="#E6E1E5"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/txtVideoSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ExoPlayer Engine"
+                android:textColor="#CAC4D0"
+                android:textSize="12sp"
+                android:ellipsize="end"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <!-- Dynamic Bitrate Format Indicator -->
+        <TextView
+            android:id="@+id/txtFormatBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/badge_background"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
+            android:text="LIVE"
+            android:textColor="#D0BCFF"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Center Playback Controls -->
+    <LinearLayout
+        android:id="@+id/centerControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_centerInParent="true">
+
+        <!-- Rewind Button -->
+        <ImageButton
+            android:id="@id/exo_rew"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_rewind"
+            android:contentDescription="Rewind 10 seconds"
+            app:tint="#E6E1E5"
+            android:layout_marginEnd="24dp" />
+
+        <!-- Overlay Play / Pause Container -->
+        <FrameLayout
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:background="@drawable/app_play_button_background"
+            android:elevation="4dp">
+
+            <!-- Play Button -->
+            <ImageButton
+                android:id="@id/exo_play"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_play"
+                android:contentDescription="Play"
+                app:tint="#381E72"
+                android:padding="20dp" />
+
+            <!-- Pause Button -->
+            <ImageButton
+                android:id="@id/exo_pause"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_pause"
+                android:contentDescription="Pause"
+                app:tint="#381E72"
+                android:padding="20dp" />
+        </FrameLayout>
+
+        <!-- Fast Forward Button -->
+        <ImageButton
+            android:id="@id/exo_ffwd"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_fastforward"
+            android:contentDescription="Fast Forward 10 seconds"
+            app:tint="#E6E1E5"
+            android:layout_marginStart="24dp" />
+
+    </LinearLayout>
+
+    <!-- Bottom Timeline and Utility Controls -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent">
+
+        <!-- Progress Timeline Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <!-- Current Time -->
+            <TextView
+                android:id="@id/exo_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="#E6E1E5"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginEnd="10dp" />
+
+            <!-- Media3 DefaultTimeBar -->
+            <androidx.media3.ui.DefaultTimeBar
+                android:id="@id/exo_progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:played_color="#D0BCFF"
+                app:scrubber_color="#D0BCFF"
+                app:unplayed_color="#33E6E1E5"
+                app:buffered_color="#66E6E1E5"
+                app:scrubber_enabled_size="12dp"
+                app:scrubber_disabled_size="8dp" />
+
+            <!-- Total Duration -->
+            <TextView
+                android:id="@id/exo_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="#E6E1E5"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp" />
+
+        </LinearLayout>
+
+        <!-- Extra Settings Row -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Left Group: Lock Button -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentStart="true"
+                android:gravity="center_vertical">
+
+                <ImageButton
+                    android:id="@+id/btnLock"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_unlock"
+                    android:contentDescription="Lock Player Interface"
+                    app:tint="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/lblLock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="Controls Active"
+                    android:textColor="#888888"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- Right Group: Resize Aspect Mode Button -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/lblResizeMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Resize: Fit"
+                    android:textColor="#888888"
+                    android:textSize="11sp"
+                    android:layout_marginEnd="4dp" />
+
+                <ImageButton
+                    android:id="@+id/btnAspectRatio"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_aspect_ratio"
+                    android:contentDescription="Change Aspect Ratio"
+                    app:tint="#FFFFFF" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- Visual Locked Screen Indicator Overlay -->
+    <LinearLayout
+        android:id="@+id/lockedOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC000000"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageButton
+            android:id="@+id/btnUnlockScreen"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/circle_background"
+            android:src="@drawable/ic_lock"
+            android:contentDescription="Unlock screen controls"
+            app:tint="#FF1744"
+            android:padding="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Screen Controls Locked"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Tap the lock icon to restore interface controls."
+            android:textColor="#888888"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

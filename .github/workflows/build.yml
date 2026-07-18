@@ -1,0 +1,73 @@
+name: Android CI/CD Build System
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'বিল্ড টাইপ সিলেক্ট করুন (debug/release/bundle)'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+        - debug
+        - release
+        - bundle
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_JSON_CONTENT: ${{ secrets.GOOGLE_SERVICES_JSON }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Prepare Build Environment
+        run: |
+          # গ্রেডল ভার্সন ৯.৩.১ সেটআপ
+          gradle wrapper --gradle-version 9.3.1
+          chmod +x gradlew
+          
+          # ডামি ডিবাগ কি-স্টোর তৈরি (প্যাকেজিং এরর সমাধানের জন্য)
+          keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Setup Android NDK & CMake
+        run: |
+          export SDKMANAGER=$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager
+          yes | $SDKMANAGER "ndk;25.1.8937393" "cmake;3.22.1"
+
+      - name: Setup Google Services
+        if: env.GOOGLE_JSON_CONTENT != ''
+        run: |
+          mkdir -p app
+          echo "$GOOGLE_JSON_CONTENT" > app/google-services.json
+
+      - name: Run Build
+        run: |
+          BUILD_TYPE="${{ github.event.inputs.build_type || 'debug' }}"
+          echo "Building: $BUILD_TYPE"
+          
+          if [ "$BUILD_TYPE" == "debug" ]; then
+            ./gradlew :app:assembleDebug
+          elif [ "$BUILD_TYPE" == "release" ]; then
+            ./gradlew :app:assembleRelease
+          else
+            ./gradlew :app:bundleRelease
+          fi
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-outputs
+          path: |
+            app/build/outputs/apk/debug/
+            app/build/outputs/apk/release/
+            app/build/outputs/bundle/release/
