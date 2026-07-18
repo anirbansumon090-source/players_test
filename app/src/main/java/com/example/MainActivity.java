@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
                 protocol = "hls";
             } else if (selectedId == R.id.radioDash) {
                 protocol = "dash";
+            } else if (selectedId == R.id.radioTs) {
+                protocol = "ts";
             } else if (selectedId == R.id.radioMp4) {
                 protocol = "mp4";
             } else {
@@ -100,12 +102,16 @@ public class MainActivity extends AppCompatActivity {
 
     private String autoDetectProtocol(String url) {
         String lowercaseUrl = url.toLowerCase();
-        if (lowercaseUrl.contains(".m3u8")) {
+        if (lowercaseUrl.contains(".m3u8") || lowercaseUrl.contains("m3u8")) {
             return "hls";
-        } else if (lowercaseUrl.contains(".mpd")) {
+        } else if (lowercaseUrl.contains(".mpd") || lowercaseUrl.contains("mpd")) {
             return "dash";
+        } else if (lowercaseUrl.contains(".ts") || lowercaseUrl.contains("=ts") || lowercaseUrl.endsWith(".ts")) {
+            return "ts";
+        } else if (lowercaseUrl.contains(".mp4") || lowercaseUrl.contains("mp4")) {
+            return "mp4";
         } else {
-            return "mp4"; // Default progressive
+            return "auto"; // Fallback to "auto" so ExoPlayer sniff-detects the format dynamically
         }
     }
 

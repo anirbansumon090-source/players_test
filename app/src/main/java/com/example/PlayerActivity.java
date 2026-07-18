@@ -16,7 +16,10 @@ import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.Player;
 import androidx.media3.common.util.UnstableApi;
+import androidx.media3.datasource.DefaultHttpDataSource;
+import androidx.media3.datasource.DefaultDataSource;
 import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.ui.AspectRatioFrameLayout;
 import androidx.media3.ui.PlayerView;
 
@@ -149,8 +152,18 @@ public class PlayerActivity extends AppCompatActivity {
 
         playerProgressBar.setVisibility(View.VISIBLE);
 
-        // Build player
-        player = new ExoPlayer.Builder(this).build();
+        // Build a highly compatible DefaultHttpDataSource.Factory with standard User-Agent and redirects enabled
+        DefaultHttpDataSource.Factory httpDataSourceFactory = new DefaultHttpDataSource.Factory()
+                .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                .setAllowCrossProtocolRedirects(true);
+
+        DefaultDataSource.Factory dataSourceFactory = new DefaultDataSource.Factory(this, httpDataSourceFactory);
+
+        // Build player with the custom DataSource.Factory to support HLS, DASH, TS and live streams
+        player = new ExoPlayer.Builder(this)
+                .setMediaSourceFactory(new DefaultMediaSourceFactory(dataSourceFactory))
+                .build();
+                
         playerView.setPlayer(player);
 
         // Map MIME types explicitly so ExoPlayer configures the exact decoders/parsers
@@ -160,6 +173,8 @@ public class PlayerActivity extends AppCompatActivity {
             mediaItemBuilder.setMimeType(MimeTypes.APPLICATION_M3U8);
         } else if ("dash".equals(videoProtocol)) {
             mediaItemBuilder.setMimeType(MimeTypes.APPLICATION_MPD);
+        } else if ("ts".equals(videoProtocol)) {
+            mediaItemBuilder.setMimeType(MimeTypes.VIDEO_MP2T);
         } else if ("mp4".equals(videoProtocol)) {
             mediaItemBuilder.setMimeType(MimeTypes.VIDEO_MP4);
         }

@@ -176,6 +176,16 @@
                             android:buttonTint="#D0BCFF" />
 
                         <RadioButton
+                            android:id="@+id/radioTs"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="TS"
+                            android:textColor="#E6E1E5"
+                            android:textSize="12sp"
+                            android:buttonTint="#D0BCFF" />
+
+                        <RadioButton
                             android:id="@+id/radioMp4"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
