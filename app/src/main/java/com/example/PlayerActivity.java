@@ -20,6 +20,10 @@ import androidx.media3.datasource.DefaultHttpDataSource;
 import androidx.media3.datasource.DefaultDataSource;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
+import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.hls.HlsMediaSource;
+import androidx.media3.exoplayer.dash.DashMediaSource;
+import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 import androidx.media3.ui.AspectRatioFrameLayout;
 import androidx.media3.ui.PlayerView;
 
@@ -180,7 +184,42 @@ public class PlayerActivity extends AppCompatActivity {
         }
         
         MediaItem mediaItem = mediaItemBuilder.build();
-        player.setMediaItem(mediaItem);
+        
+        // Build the specific MediaSource explicitly based on protocol
+        MediaSource mediaSource;
+        if ("hls".equals(videoProtocol)) {
+            mediaSource = new HlsMediaSource.Factory(dataSourceFactory)
+                    .setAllowChunklessPreparation(true)
+                    .createMediaSource(mediaItem);
+        } else if ("dash".equals(videoProtocol)) {
+            mediaSource = new DashMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(mediaItem);
+        } else if ("ts".equals(videoProtocol) || "mp4".equals(videoProtocol)) {
+            mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(mediaItem);
+        } else {
+            // Auto protocol selection
+            String urlLower = videoUrl.toLowerCase();
+            if (urlLower.contains(".m3u8") || urlLower.contains("m3u8")) {
+                mediaItemBuilder.setMimeType(MimeTypes.APPLICATION_M3U8);
+                mediaSource = new HlsMediaSource.Factory(dataSourceFactory)
+                        .setAllowChunklessPreparation(true)
+                        .createMediaSource(mediaItemBuilder.build());
+            } else if (urlLower.contains(".mpd") || urlLower.contains("mpd")) {
+                mediaItemBuilder.setMimeType(MimeTypes.APPLICATION_MPD);
+                mediaSource = new DashMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(mediaItemBuilder.build());
+            } else if (urlLower.contains(".ts") || urlLower.contains("=ts") || urlLower.endsWith(".ts")) {
+                mediaItemBuilder.setMimeType(MimeTypes.VIDEO_MP2T);
+                mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(mediaItemBuilder.build());
+            } else {
+                mediaSource = new DefaultMediaSourceFactory(dataSourceFactory)
+                        .createMediaSource(mediaItem);
+            }
+        }
+
+        player.setMediaSource(mediaSource);
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentItem, playbackPosition);
         

@@ -128,10 +128,18 @@ public class MainActivity extends AppCompatActivity {
 
         streams.add(new StreamItem(
                 "Tears of Steel (DASH / MPD)",
-                "Blender open movie Sci-Fi stream in standard DASH container",
-                "https://sec.ch9.ms/ch9/53a8/12586b3a-59fb-4f27-bc9d-b40b8fec53a8/TearsOfSteelDASH_high.ism/manifest(format=mpd-time-csf)",
+                "Unified Streaming official DASH test stream",
+                "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.mpd",
                 "dash",
                 "🚀"
+        ));
+
+        streams.add(new StreamItem(
+                "Tears of Steel (HLS / M3U8)",
+                "Unified Streaming official adaptive HLS live stream",
+                "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
+                "hls",
+                "📡"
         ));
 
         streams.add(new StreamItem(
@@ -140,14 +148,6 @@ public class MainActivity extends AppCompatActivity {
                 "https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd",
                 "dash",
                 "🐰"
-        ));
-
-        streams.add(new StreamItem(
-                "Big Buck Bunny (HLS Standard)",
-                "Classic animated bunny film stream over HLS protocol",
-                "https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,640x360_1500,.f4v.csmil/master.m3u8",
-                "hls",
-                "🌳"
         ));
 
         streams.add(new StreamItem(
